@@ -4,7 +4,6 @@ import BlogCategoryCard from "@/components/BlogCategoryCard/BlogCategoryCard";
 import { Category } from "@/models/category";
 import { BLOG_TEXT, BLOG_TITLE } from "@/constants/constants";
 import { blogSectionClasses } from "./blogClassNames";
-import { categoryApi } from "../api/blogCategory";
 
 export interface BlogPageProps {
   categories: Category[];
@@ -39,10 +38,11 @@ const Blog: NextPage<BlogPageProps> = (props) => {
 export default Blog;
 
 export async function getServerSideProps(context: NextPageContext) {
-  const blogCategories = await categoryApi.getBlogCategory();
+  const categoriesRes = await  fetch('http://demo0206776.mockable.io/getBlogCategory');
+  let data = await categoriesRes.json();
   return {
     props: {
-      categories: blogCategories,
+      categories: data
     },
   };
 }

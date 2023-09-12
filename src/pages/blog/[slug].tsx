@@ -2,10 +2,8 @@ import Image from "next/image";
 import { NextPage, NextPageContext } from "next";
 
 import { Blogs } from "@/models/blog";
-import { getUrl } from "nextjs-current-url/server";
 import Link from "next/link";
 import { classNames } from "./blogClassNames";
-import { contentApi } from "../api/blogContent";
 
 export interface BlogItemProps {
   blogPost: Blogs;
@@ -63,14 +61,16 @@ const BlogItem: NextPage<BlogItemProps> = (props) => {
 export default BlogItem;
 
 export const getServerSideProps = async (context: NextPageContext) => {
-  const url = getUrl({ req: context.req });
-  const blogContent = await contentApi.getBlogContent()
-  let currentPost = blogContent.filter(
-    (blogs) => blogs.slug === url?.searchParams.get("slug")
+  //TODO: Check nextjs module import for getUrl('nextjs-current-url/server') failing for test case
+  const urlSlug = context.req?.url?.split(/[?=]/)[2];
+  const contentRes = await  fetch('http://demo0206776.mockable.io/getBlogContent'); 
+  let data = await contentRes.json();
+  let currentPost = data.filter(
+    (blogs: { slug: string | null | undefined; }) => blogs.slug === urlSlug
   );
   return {
     props: {
-      blogPost: currentPost[0],
+      blogPost: currentPost[0]
     },
   };
 };

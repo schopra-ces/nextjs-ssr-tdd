@@ -1,3 +1,4 @@
+import { CATEGORY } from "@/mockdata/blog-categories";
 import { Category } from "@/models/category";
 
 class CategoryApi {
